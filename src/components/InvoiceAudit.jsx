@@ -23,10 +23,12 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
       const nameParam = filterName ? filterName.trim() : "";
       const dateParam = filterDate ? filterDate : "";
 
-      const resLogs = await axios.get(`${BASE_URL}/api/bills/all`, {
-  ...config,
-  params: { invoiceId: invoiceIdParam, name: nameParam, date: dateParam }
-});
+          // ✅ ENDPOINT UPDATED TO MATCH BACKEND SEARCH CONTROLLER
+      const resLogs = await axios.get(`${BASE_URL}/api/invoices/search`, {
+        ...config,
+        params: { invoiceId: invoiceIdParam, name: nameParam, date: dateParam }
+      });
+
 
       setAuditLogs(resLogs.data);
 
