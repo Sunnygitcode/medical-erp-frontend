@@ -21,7 +21,7 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
 
       const invoiceIdParam = filterInvoiceId ? filterInvoiceId.trim() : "";
       const nameParam = filterName ? filterName.trim() : "";
-      const dateParam = filterDate ? filterDate : "";
+      const dateParam = (invoiceIdParam || nameParam) ? "" : (filterDate || "");
 
       const resLogs = await axios.get(`${BASE_URL}/api/invoices/search`, {
         ...config,
@@ -187,17 +187,23 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
                           <tr key={idx}>
                             <td>{item.medicineId?.name || item.name || 'Unknown Medicine'}</td>
                             <td className="text-center">{item.quantity || 0}</td>
-                            <td className="text-end">₹{item.price || 0}</td>
-                            <td className="text-end fw-bold">₹{(item.quantity * item.price) || 0}</td>
+                            <td className="text-end">₹{item.pricePerUnit || item.price || 0}</td>
+                            <td className="text-end fw-bold">₹{item.totalCost || (item.quantity * item.price) || 0}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
-                  <div className="text-end small">
-                    <strong>Grand Total:</strong> <span className="fs-6 fw-bold text-success">₹{selectedInvoice.grandTotal || 0}</span>
+                  <div className="text-end mb-3">
+                    <h5 className="fw-bold text-dark">Grand Total: ₹{selectedInvoice.grandTotal || 0}</h5>
                   </div>
-                  <button className="btn btn-primary btn-sm mt-3" onClick={handlePrint}>Print Bill</button>
+                  <hr />
+                  <div className="text-center small text-muted">
+                    Thank you for choosing Metropolitan Central Local Pharmacy!
+                  </div>
+                </div>
+                <div className="text-end mt-3">
+                  <button className="btn btn-primary btn-sm px-3 fw-bold" onClick={handlePrint}>Print Bill</button>
                 </div>
               </div>
             </div>
