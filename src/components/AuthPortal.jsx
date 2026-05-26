@@ -9,11 +9,15 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
   const [role, setRole] = useState('Cashier');
   const [loading, setLoading] = useState(false);
 
+  // 🌐 AAPKA LIVE BACKEND BASE URL
+  const BASE_URL = "https://onrender.com";
+
   const performLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("https://onrender.com", { email, password });
+      // ✅ EXACT LOGIN ENDPOINT FIXED HERE
+      const res = await axios.post(`${BASE_URL}/auth/login`, { email, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.user.role);
       localStorage.setItem('staffName', res.data.user.name);
@@ -22,7 +26,7 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
       setUserRole(res.data.user.role);
       setStaffName(res.data.user.name);
     } catch (err) {
-      alert("Invalid employee server session access parameters. Check your password!");
+      alert(err.response?.data?.error || "Invalid employee server session access parameters. Check your password!");
     } finally {
       setLoading(false);
     }
@@ -32,10 +36,12 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("https://onrender.com", { name, email, password, role });
+      // ✅ EXACT REGISTER ENDPOINT FIXED HERE
+      const res = await axios.post(`${BASE_URL}/auth/register`, { name, email, password, role });
       alert(res.data.message || "Staff account created successfully!");
-      // Reset registration form fields after success
       setName('');
+      setEmail('');
+      setPassword('');
       setIsRegistering(false);
     } catch (err) {
       alert(err.response?.data?.error || "Registration validation anomaly.");
@@ -132,7 +138,7 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
                 type="text" 
                 className="form-control rounded-3" 
                 placeholder="Name Please" 
-                value={name || ''} // 👈 Added missing value field here to fix the console warning
+                value={name || ''} 
                 required 
                 onChange={e => setName(e.target.value)} 
               />
@@ -153,7 +159,7 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
               <input 
                 type="password" 
                 className="form-control rounded-3" 
-                placeholder="Insert Stronge Password" 
+                placeholder="Insert Strong Password" 
                 value={password || ''} 
                 required 
                 onChange={e => setPassword(e.target.value)} 

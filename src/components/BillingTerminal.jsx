@@ -11,6 +11,8 @@ export default function BillingTerminal({
     patientAge: "",
     patientPhone: "",
   });
+const BASE_URL = "https://onrender.com";
+
   const [dbMedicines, setDbMedicines] = useState([]);
   const [searchMed, setSearchMed] = useState("");
   const [foundMed, setFoundMed] = useState(null);
@@ -24,9 +26,8 @@ export default function BillingTerminal({
   useEffect(() => {
     const loadCatalog = async () => {
       try {
-        const res = await axios.get(
-          "https://onrender.com",
-        );
+        const res = await axios.get(`${BASE_URL}/medicines/all-list`);
+
         setDbMedicines(res.data);
       } catch (err) {
         console.error("Database data baseline sync failed.");
@@ -49,8 +50,7 @@ export default function BillingTerminal({
     if (e) e.preventDefault();
     if (!searchMed.trim()) return alert("Please specify a medicine name.");
     try {
-      const response = await axios.get(
-        `https://onrender.com`,
+      const response = await axios.get(`${BASE_URL}/inventory/search`, 
         {
           params: { name: searchMed.trim() },
         },
@@ -101,7 +101,8 @@ export default function BillingTerminal({
       return alert("Please specify patient details and add items to cart.");
     }
     try {
-      const res = await axios.post("https://onrender.com", {
+     const res = await axios.post(`${BASE_URL}/checkout`, {
+
         ...patient,
         items: cart,
         paymentMethod,

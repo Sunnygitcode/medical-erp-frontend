@@ -10,6 +10,7 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
 
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [showBillModal, setShowBillModal] = useState(false);
+const BASE_URL = "https://onrender.com";
 
   const pullSystemReports = async () => {
     try {
@@ -22,14 +23,16 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
       const nameParam = filterName ? filterName.trim() : "";
       const dateParam = filterDate ? filterDate : "";
 
-      const resLogs = await axios.get(
-        `https://onrender.com`,
-        config
-      );
+      const resLogs = await axios.get(`${BASE_URL}/bills/all`, {
+  ...config,
+  params: { invoiceId: invoiceIdParam, name: nameParam, date: dateParam }
+});
+
       setAuditLogs(resLogs.data);
 
       if (userRole === 'Owner') {
-        const resAnalytics = await axios.get("https://onrender.com", config);
+        const resAnalytics = await axios.get(`${BASE_URL}/reports/owner-metrics`, config);
+
         setAnalytics(resAnalytics.data);
       }
     } catch (err) { 
