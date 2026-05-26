@@ -23,18 +23,15 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
       const nameParam = filterName ? filterName.trim() : "";
       const dateParam = filterDate ? filterDate : "";
 
-          // ✅ ENDPOINT UPDATED TO MATCH BACKEND SEARCH CONTROLLER
       const resLogs = await axios.get(`${BASE_URL}/api/invoices/search`, {
         ...config,
         params: { invoiceId: invoiceIdParam, name: nameParam, date: dateParam }
       });
 
-
       setAuditLogs(resLogs.data);
 
       if (userRole === 'Owner') {
         const resAnalytics = await axios.get(`${BASE_URL}/api/reports/owner-metrics`, config);
-
         setAnalytics(resAnalytics.data);
       }
     } catch (err) { 
@@ -44,7 +41,7 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
 
   useEffect(() => {
     pullSystemReports();
-  }, [refreshTrigger, filterInvoiceId, filterName, filterDate]);
+  }, [refreshTrigger]);
 
   const handleInvoiceClick = (invoice) => {
     setSelectedInvoice(invoice);
@@ -62,7 +59,6 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
     <div className="card shadow-sm border-0 p-4 bg-white">
       <h4 className="text-secondary border-bottom pb-2 mb-3 fw-bold">📊 Search Bill's </h4>
       
-      {/* Search Filter Form */}
       <div className="d-flex flex-column gap-2 mb-3">
         <input 
           type="text" 
@@ -95,7 +91,6 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
         </button>
       </div>
 
-      {/* Query Results Table */}
       <div className="mt-3 border-top pt-3">
         <h6 className="fw-bold text-secondary mb-2">Total Patients' Bills ({auditLogs.length})</h6>
         {auditLogs.length === 0 ? (
@@ -131,7 +126,6 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
         )}
       </div>
 
-      {/* Owner Analytics Section */}
       {userRole === 'Owner' && (
         <div className="row g-2 mt-3 text-center">
           <div className="col">
@@ -149,7 +143,6 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
         </div>
       )}
 
-      {/* --- MODAL --- */}
       {showBillModal && selectedInvoice && (
         <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)", zIndex: 1060 }}>
           <div className="modal-dialog modal-dialog-centered modal-lg">
@@ -190,35 +183,22 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {selectedInvoice.soldItems && selectedInvoice.soldItems.length > 0 ? (
-                          selectedInvoice.soldItems.map((item, idx) => (
-                            <tr key={idx}>
-                              <td className="fw-semibold text-dark">{item.name || 'N/A'}</td>
-                              <td className="text-center">{item.quantity || 0}</td>
-                              <td className="text-end">₹{item.pricePerUnit || 0}</td>
-                              <td className="text-end fw-bold">₹{item.totalCost || 0}</td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr>
-                            <td colSpan="4" className="text-center text-muted py-2">No medicine details found.</td>
+                        {selectedInvoice.soldItems?.map((item, idx) => (
+                          <tr key={idx}>
+                            <td>{item.medicineId?.name || item.name || 'Unknown Medicine'}</td>
+                            <td className="text-center">{item.quantity || 0}</td>
+                            <td className="text-end">₹{item.price || 0}</td>
+                            <td className="text-end fw-bold">₹{(item.quantity * item.price) || 0}</td>
                           </tr>
-                        )}
+                        ))}
                       </tbody>
                     </table>
                   </div>
-
-                  <hr />
-                  <div className="d-flex justify-content-between align-items-center mt-2">
-                    <h5 className="fw-bold m-0">Grand Total:</h5>
-                    <h4 className="fw-bold text-success m-0">₹{selectedInvoice.grandTotal || 0}</h4>
+                  <div className="text-end small">
+                    <strong>Grand Total:</strong> <span className="fs-6 fw-bold text-success">₹{selectedInvoice.grandTotal || 0}</span>
                   </div>
+                  <button className="btn btn-primary btn-sm mt-3" onClick={handlePrint}>Print Bill</button>
                 </div>
-              </div>
-
-              <div className="modal-footer gap-2">
-                <button type="button" className="btn btn-primary fw-bold px-4" onClick={handlePrint}>🖨️ Print Invoice</button>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowBillModal(false)}>Close</button>
               </div>
             </div>
           </div>
