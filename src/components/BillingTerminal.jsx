@@ -11,7 +11,7 @@ export default function BillingTerminal({
     patientAge: "",
     patientPhone: "",
   });
-const BASE_URL = "https://onrender.com";
+  const BASE_URL = "https://sunnyrajput-medical-erp.onrender.com";
 
   const [dbMedicines, setDbMedicines] = useState([]);
   const [searchMed, setSearchMed] = useState("");

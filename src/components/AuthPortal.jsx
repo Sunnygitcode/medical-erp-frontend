@@ -9,8 +9,9 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
   const [role, setRole] = useState('Cashier');
   const [loading, setLoading] = useState(false);
 
-  // 🌐 AAPKA LIVE BACKEND BASE URL
-  const BASE_URL = "https://onrender.com";
+  
+  const BASE_URL = "https://sunnyrajput-medical-erp.onrender.com";
+
 
   const performLogin = async (e) => {
     e.preventDefault();
