@@ -26,7 +26,7 @@ export default function BillingTerminal({
   useEffect(() => {
     const loadCatalog = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/medicines/all-list`);
+        const res = await axios.get(`${BASE_URL}/api/medicines/all-list`);
 
         setDbMedicines(res.data);
       } catch (err) {
@@ -50,7 +50,7 @@ export default function BillingTerminal({
     if (e) e.preventDefault();
     if (!searchMed.trim()) return alert("Please specify a medicine name.");
     try {
-      const response = await axios.get(`${BASE_URL}/inventory/search`, 
+      const response = await axios.get(`${BASE_URL}/api/inventory/search`, 
         {
           params: { name: searchMed.trim() },
         },
@@ -101,7 +101,7 @@ export default function BillingTerminal({
       return alert("Please specify patient details and add items to cart.");
     }
     try {
-     const res = await axios.post(`${BASE_URL}/checkout`, {
+     const res = await axios.post(`${BASE_URL}/api/checkout`, {
 
         ...patient,
         items: cart,

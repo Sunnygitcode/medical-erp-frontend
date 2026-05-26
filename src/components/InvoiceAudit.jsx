@@ -23,7 +23,7 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
       const nameParam = filterName ? filterName.trim() : "";
       const dateParam = filterDate ? filterDate : "";
 
-      const resLogs = await axios.get(`${BASE_URL}/bills/all`, {
+      const resLogs = await axios.get(`${BASE_URL}/api/bills/all`, {
   ...config,
   params: { invoiceId: invoiceIdParam, name: nameParam, date: dateParam }
 });
@@ -31,7 +31,7 @@ export default function InvoiceAudit({ userRole, refreshTrigger }) {
       setAuditLogs(resLogs.data);
 
       if (userRole === 'Owner') {
-        const resAnalytics = await axios.get(`${BASE_URL}/reports/owner-metrics`, config);
+        const resAnalytics = await axios.get(`${BASE_URL}/api/reports/owner-metrics`, config);
 
         setAnalytics(resAnalytics.data);
       }

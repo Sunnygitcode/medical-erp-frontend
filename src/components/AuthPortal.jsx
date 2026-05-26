@@ -18,7 +18,7 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
     setLoading(true);
     try {
       // ✅ EXACT LOGIN ENDPOINT FIXED HERE
-      const res = await axios.post(`${BASE_URL}/auth/login`, { email, password });
+      const res = await axios.post(`${BASE_URL}/api/auth/login`, { email, password });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.user.role);
       localStorage.setItem('staffName', res.data.user.name);
@@ -38,7 +38,7 @@ export default function AuthPortal({ setToken, setUserRole, setStaffName }) {
     setLoading(true);
     try {
       // ✅ EXACT REGISTER ENDPOINT FIXED HERE
-      const res = await axios.post(`${BASE_URL}/auth/register`, { name, email, password, role });
+      const res = await axios.post(`${BASE_URL}/api/auth/register`, { name, email, password, role });
       alert(res.data.message || "Staff account created successfully!");
       setName('');
       setEmail('');
